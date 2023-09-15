@@ -19,6 +19,9 @@ import at.shockbytes.dante.core.image.picker.DefaultImagePicking
 import at.shockbytes.dante.core.image.picker.ImagePickerConfig
 import at.shockbytes.dante.core.image.picker.ImagePicking
 import at.shockbytes.dante.core.network.BookDownloader
+import at.shockbytes.dante.core.network.DefaultDetailsDownloader
+import at.shockbytes.dante.core.network.DetailsDownloader
+import at.shockbytes.dante.core.network.google.BookDetailsApi
 import at.shockbytes.dante.core.network.google.GoogleBooksApi
 import at.shockbytes.dante.core.network.google.GoogleBooksDownloader
 import at.shockbytes.dante.core.user.FirebaseUserRepository
@@ -85,13 +88,23 @@ class CoreModule(
 
     @Provides
     @Singleton
+    fun provideDetailsDownloader(
+        api: BookDetailsApi,
+    ): DetailsDownloader {
+        return DefaultDetailsDownloader(api)
+    }
+
+    @Provides
+    @Singleton
     fun provideRealmInstanceProvider(): RealmInstanceProvider {
-        return RealmInstanceProvider(RealmConfiguration.Builder()
-            .schemaVersion(DanteRealmMigration.migrationVersion)
-            .allowWritesOnUiThread(config.allowRealmExecutionOnUiThread)
-            .allowQueriesOnUiThread(config.allowRealmExecutionOnUiThread)
-            .migration(DanteRealmMigration())
-            .build())
+        return RealmInstanceProvider(
+            RealmConfiguration.Builder()
+                .schemaVersion(DanteRealmMigration.migrationVersion)
+                .allowWritesOnUiThread(config.allowRealmExecutionOnUiThread)
+                .allowQueriesOnUiThread(config.allowRealmExecutionOnUiThread)
+                .migration(DanteRealmMigration())
+                .build()
+        )
     }
 
     @Provides

@@ -2,6 +2,7 @@ package at.shockbytes.dante.core.injection
 
 import at.shockbytes.dante.core.BuildConfig
 import at.shockbytes.dante.core.book.BookSuggestion
+import at.shockbytes.dante.core.network.google.BookDetailsApi
 import at.shockbytes.dante.core.network.google.GoogleBooksApi
 import at.shockbytes.dante.core.network.google.gson.GoogleBooksSuggestionResponseDeserializer
 import com.google.gson.Gson
@@ -58,5 +59,20 @@ class NetworkModule {
                 .baseUrl(GoogleBooksApi.SERVICE_ENDPOINT)
                 .build()
                 .create(GoogleBooksApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookDetailsApi(
+        client: OkHttpClient,
+        @Named("gsonDownload") gson: Gson
+    ): BookDetailsApi {
+        return Retrofit.Builder()
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(BookDetailsApi.SERVICE_ENDPOINT)
+            .build()
+            .create(BookDetailsApi::class.java)
     }
 }

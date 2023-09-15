@@ -9,6 +9,8 @@ import at.shockbytes.dante.core.image.picker.ImagePicking
 import at.shockbytes.dante.core.login.GoogleAuth
 import at.shockbytes.dante.core.login.LoginRepository
 import at.shockbytes.dante.core.network.BookDownloader
+import at.shockbytes.dante.core.network.DetailsDownloader
+import at.shockbytes.dante.core.network.google.BookDetailsApi
 import at.shockbytes.dante.core.network.google.GoogleBooksApi
 import at.shockbytes.dante.core.user.UserRepository
 import at.shockbytes.dante.util.scheduler.SchedulerFacade
@@ -44,4 +46,7 @@ interface CoreComponent {
 
     fun getOkHttpClient(): OkHttpClient
     fun provideGoogleBooksApi(): GoogleBooksApi
+
+    fun getBookDetailsDownloader(): DetailsDownloader
+    fun provideBookDetailsApi(): BookDetailsApi
 }
