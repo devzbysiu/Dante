@@ -9,7 +9,6 @@ class DefaultDetailsDownloader(
 ) : DetailsDownloader {
 
     override fun downloadDetails(url: String): Observable<BookEntity> {
-        return Observable.just(BookEntity(title = "Downloaded title"))
-//        return api.downloadBookDetails(url)
+        return api.downloadBookDetails(url)
     }
 }
