@@ -47,16 +47,17 @@ class AnnouncementFragment : BaseFragment<FragmentAnnouncementBinding>() {
     override fun bindViewModel() {
         viewModel.requestAnnouncementState()
 
-        viewModel.getAnnouncementState().observe(this, { announcementState ->
+        viewModel.getAnnouncementState().observe(this) { announcementState ->
             when (announcementState) {
                 is AnnouncementViewModel.AnnouncementState.Active -> {
                     populateAnnouncementViews(announcementState.announcement)
                 }
+
                 is AnnouncementViewModel.AnnouncementState.Inactive -> {
                     closeModal()
                 }
             }
-        })
+        }
     }
 
     private fun populateAnnouncementViews(announcement: Announcement) {
@@ -80,6 +81,8 @@ class AnnouncementFragment : BaseFragment<FragmentAnnouncementBinding>() {
                         setImageResource(illustration.drawableRes)
                     }
                 }
+
+                else -> {}
             }
 
             vb.btnAnnouncementAction.apply {

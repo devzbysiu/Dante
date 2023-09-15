@@ -85,6 +85,8 @@ class ImportBooksStorageFragment : BaseFragment<FragmentImportBooksStorageBindin
                 showSnackbar(getString(R.string.import_success))
                 viewModel.confirmImport()
             }
+
+            else -> {}
         }
     }
 

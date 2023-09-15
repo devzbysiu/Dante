@@ -3,6 +3,7 @@ package at.shockbytes.dante.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import at.shockbytes.dante.R
 import at.shockbytes.dante.core.book.BookEntity
@@ -29,6 +30,11 @@ class ManualAddActivity : ContainerTintableBackNavigableActivity<ManualAddActivi
         get() = ManualAddFragment.newInstance(bookEntity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                Timber.d("send: ${intent.getStringExtra(Intent.EXTRA_TEXT)}")
+            }
+        }
         bookEntity = intent.extras?.getParcelable(ARG_BOOK_ENTITY_UPDATE)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.manual_add_activity)
