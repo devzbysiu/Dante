@@ -15,12 +15,12 @@ import androidx.viewpager.widget.ViewPager
 import at.shockbytes.dante.R
 import at.shockbytes.dante.camera.BarcodeScanResultBottomSheetDialogFragment
 import at.shockbytes.dante.core.image.GlideImageLoader.loadBitmap
+import at.shockbytes.dante.core.network.DetailsDownloader
 import at.shockbytes.dante.core.shortcut.AppShortcutHandler
 import at.shockbytes.dante.injection.AppComponent
 import at.shockbytes.dante.navigation.ActivityNavigator
 import at.shockbytes.dante.navigation.Destination
 import at.shockbytes.dante.ui.activity.core.ActivityTransition
-import at.shockbytes.dante.ui.activity.core.BaseActivity
 import at.shockbytes.dante.ui.adapter.BookPagerAdapter
 import at.shockbytes.dante.ui.fragment.AnnouncementFragment
 import at.shockbytes.dante.ui.fragment.MenuFragment
@@ -30,7 +30,6 @@ import at.shockbytes.dante.databinding.ActivityMainBinding
 import at.shockbytes.dante.ui.widget.DanteAppWidgetManager
 import at.shockbytes.dante.util.settings.DanteSettings
 import at.shockbytes.dante.ui.activity.core.BaseBindingActivity
-import at.shockbytes.dante.util.DanteUtils
 import at.shockbytes.dante.util.ExceptionHandlers
 import at.shockbytes.dante.util.addTo
 import at.shockbytes.dante.util.createRoundedBitmap
@@ -58,6 +57,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     @Inject
     lateinit var appShortcutHandler: AppShortcutHandler
 
+    @Inject
+    lateinit var detailsDownloader: DetailsDownloader
+
     private var tabId: Int = R.id.menu_navigation_current
 
     private lateinit var pagerAdapter: BookPagerAdapter
@@ -70,6 +72,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     override fun onCreate(savedInstanceState: Bundle?) {
         setupSharedElementTransition()
         super.onCreate(savedInstanceState)
+
+        handleAmazonUrlShare()
         setContentViewWithBinding(ActivityMainBinding::inflate)
         setSupportActionBar(vb.toolbarMain)
 
@@ -82,6 +86,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
         initializeNavigation()
         setupDarkMode()
         setupFabMorph()
+    }
+
+    private fun handleAmazonUrlShare() {
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                val amazonUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
+                val downloaderDisposable = detailsDownloader.downloadDetails(amazonUrl!!).subscribe {
+                    BarcodeScanResultBottomSheetDialogFragment
+                        .newInstance(it.isbn, askForAnotherScan = false)
+                        .show(supportFragmentManager, "show-bottom-sheet-with-book")
+                }
+                compositeDisposable.add(downloaderDisposable)
+            }
+        }
     }
 
     private fun setupSharedElementTransition() {
@@ -260,7 +278,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     }
 
     private fun handleIntentExtras() {
-
         val bookDetailInfo = intent.getParcelableExtra<Destination.BookDetail.BookDetailInfo>(ARG_OPEN_BOOK_DETAIL_FOR_ID)
         val openCameraAfterLaunch = intent.getBooleanExtra(ARG_OPEN_CAMERA_AFTER_LAUNCH, false)
 

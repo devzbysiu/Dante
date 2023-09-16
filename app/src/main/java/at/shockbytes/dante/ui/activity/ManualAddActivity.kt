@@ -27,29 +27,13 @@ class ManualAddActivity : ContainerTintableBackNavigableActivity<ManualAddActivi
     @Inject
     lateinit var appShortcutHandler: AppShortcutHandler
 
-    @Inject
-    lateinit var detailsDownloader: DetailsDownloader
-
     private var bookEntity: BookEntity? = null
 
     override val displayFragment: Fragment
         get() = ManualAddFragment.newInstance(bookEntity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // NOTE: this is a hack:
-        // - I need to inject detailsDownloader
-        // - it will be injected in `super.onCreate() below, but it's too late
-        // - so injectToGraph is called here and later in super.onCreate() as well
-        injectToGraph((application as DanteApp).appComponent)
-        bookEntity = when (intent?.action) {
-            Intent.ACTION_SEND -> {
-                val amazonUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
-                Timber.d("send: ${intent.getStringExtra(Intent.EXTRA_TEXT)}")
-                // TODO: Blocking first?
-                detailsDownloader.downloadDetails(amazonUrl!!).blockingFirst()
-            }
-            else -> intent.extras?.getParcelable(ARG_BOOK_ENTITY_UPDATE)
-        }
+        bookEntity = intent.extras?.getParcelable(ARG_BOOK_ENTITY_UPDATE)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.manual_add_activity)
     }
