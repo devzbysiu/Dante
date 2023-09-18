@@ -65,6 +65,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     private lateinit var pagerAdapter: BookPagerAdapter
 
     private lateinit var viewModel: MainViewModel
+
     private lateinit var userViewModel: UserViewModel
 
     override val activityTransition = ActivityTransition.none()
@@ -73,7 +74,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
         setupSharedElementTransition()
         super.onCreate(savedInstanceState)
 
-        handleAmazonUrlShare()
         setContentViewWithBinding(ActivityMainBinding::inflate)
         setSupportActionBar(vb.toolbarMain)
 
@@ -86,26 +86,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
         initializeNavigation()
         setupDarkMode()
         setupFabMorph()
-    }
-
-    private fun handleAmazonUrlShare() {
-        if (intent?.action == Intent.ACTION_SEND) {
-            val amazonUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
-            val downloaderDisposable = detailsDownloader.downloadDetails(amazonUrl!!)
-                .doOnError { showToast("Failed to fetch book details from URL", showLong = true) }
-                .subscribe {
-                    val query = it.isbn.ifBlank { it.title }
-                    if (query.isBlank()) {
-                        showToast(
-                            "Failed to get ISBN or Title of the book from the URL",
-                            showLong = true
-                        )
-                        return@subscribe
-                    }
-                    showBottomSheetDialog(query)
-                }
-            compositeDisposable.add(downloaderDisposable)
-        }
     }
 
     private fun setupSharedElementTransition() {
@@ -181,11 +161,32 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
 
     override fun onStart() {
         super.onStart()
+        handleAmazonUrlShare()
         appShortcutHandler.handleAppShortcutForActivity(
             activity = this,
             shortcutTitle = "extra_app_shortcut_title",
             action = ::showAddByTitleDialog
         )
+    }
+
+    private fun handleAmazonUrlShare() {
+        if (intent?.action == Intent.ACTION_SEND) {
+            val amazonUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
+            val downloaderDisposable = detailsDownloader.downloadDetails(amazonUrl!!)
+                .doOnError { showToast("Failed to fetch book details from URL", showLong = true) }
+                .subscribe {
+                    val query = it.isbn.ifBlank { it.title }
+                    if (query.isBlank()) {
+                        showToast(
+                            "Failed to get ISBN or Title of the book from the URL",
+                            showLong = true
+                        )
+                        return@subscribe
+                    }
+                    showBottomSheetDialog(query)
+                }
+            compositeDisposable.add(downloaderDisposable)
+        }
     }
 
     override fun onStop() {
