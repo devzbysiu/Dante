@@ -89,16 +89,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     }
 
     private fun handleAmazonUrlShare() {
-        when (intent?.action) {
-            Intent.ACTION_SEND -> {
-                val amazonUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
-                val downloaderDisposable = detailsDownloader.downloadDetails(amazonUrl!!).subscribe {
-                    BarcodeScanResultBottomSheetDialogFragment
-                        .newInstance(it.isbn, askForAnotherScan = false)
-                        .show(supportFragmentManager, "show-bottom-sheet-with-book")
-                }
-                compositeDisposable.add(downloaderDisposable)
+        if (intent?.action == Intent.ACTION_SEND) {
+            val amazonUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
+            val downloaderDisposable = detailsDownloader.downloadDetails(amazonUrl!!).subscribe {
+                BarcodeScanResultBottomSheetDialogFragment
+                    .newInstance(it.isbn, askForAnotherScan = false)
+                    .show(supportFragmentManager, "show-bottom-sheet-with-book")
             }
+            compositeDisposable.add(downloaderDisposable)
         }
     }
 
@@ -202,7 +200,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     }
 
     override fun onPageScrollStateChanged(state: Int) = Unit
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) =
+        Unit
 
     // ---------------------------------------------------
 
@@ -251,7 +250,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
             .map { bitmap ->
                 createRoundedBitmap(bitmap)
             }
-            .subscribe(vb.imgButtonMainToolbarMore::setImageDrawable, ExceptionHandlers::defaultExceptionHandler)
+            .subscribe(
+                vb.imgButtonMainToolbarMore::setImageDrawable,
+                ExceptionHandlers::defaultExceptionHandler
+            )
             .addTo(compositeDisposable)
     }
 
@@ -278,7 +280,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     }
 
     private fun handleIntentExtras() {
-        val bookDetailInfo = intent.getParcelableExtra<Destination.BookDetail.BookDetailInfo>(ARG_OPEN_BOOK_DETAIL_FOR_ID)
+        val bookDetailInfo = intent.getParcelableExtra<Destination.BookDetail.BookDetailInfo>(
+            ARG_OPEN_BOOK_DETAIL_FOR_ID
+        )
         val openCameraAfterLaunch = intent.getBooleanExtra(ARG_OPEN_CAMERA_AFTER_LAUNCH, false)
 
         when {
