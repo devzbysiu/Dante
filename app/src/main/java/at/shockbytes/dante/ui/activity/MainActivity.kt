@@ -91,11 +91,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
     private fun handleAmazonUrlShare() {
         if (intent?.action == Intent.ACTION_SEND) {
             val amazonUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
-            val downloaderDisposable = detailsDownloader.downloadDetails(amazonUrl!!).subscribe {
-                BarcodeScanResultBottomSheetDialogFragment
-                    .newInstance(it.isbn, askForAnotherScan = false)
-                    .show(supportFragmentManager, "show-bottom-sheet-with-book")
-            }
+            val downloaderDisposable = detailsDownloader.downloadDetails(amazonUrl!!)
+                .doOnError { showToast("Failed to fetch book details from URL", showLong = true) }
+                .subscribe {
+                    val query = it.isbn.ifBlank { it.title }
+                    if (query.isBlank()) {
+                        showToast(
+                            "Failed to get ISBN or Title of the book from the URL",
+                            showLong = true
+                        )
+                        return@subscribe
+                    }
+                    showBottomSheetDialog(query)
+                }
             compositeDisposable.add(downloaderDisposable)
         }
     }
@@ -385,14 +393,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ViewPager.OnPag
             input(allowEmpty = false, hintRes = R.string.manual_query) { _, query ->
                 // Remove blanks with + so query works also for titles
                 val correctedQuery = query.toString().replace(' ', '+')
-                BarcodeScanResultBottomSheetDialogFragment
-                    .newInstance(correctedQuery, askForAnotherScan = false)
-                    .show(supportFragmentManager, "show-bottom-sheet-with-book")
+                showBottomSheetDialog(correctedQuery)
             }
             positiveButton(android.R.string.search_go)
             cancelOnTouchOutside(true)
             cornerRadius(AppUtils.convertDpInPixel(6, this@MainActivity).toFloat())
         }
+    }
+
+    private fun showBottomSheetDialog(correctedQuery: String) {
+        BarcodeScanResultBottomSheetDialogFragment
+            .newInstance(correctedQuery, askForAnotherScan = false)
+            .show(supportFragmentManager, "show-bottom-sheet-with-book")
     }
 
     private fun setupDarkMode() {
