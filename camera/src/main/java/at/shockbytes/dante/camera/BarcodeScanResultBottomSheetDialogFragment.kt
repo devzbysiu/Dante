@@ -46,6 +46,7 @@ class BarcodeScanResultBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: BarcodeResultViewModel
 
     private var _binding: FragmentBarcodeScanBottomSheetBinding? = null
+
     // This property is only valid between onCreateView and onDestroyView
     private val vb: FragmentBarcodeScanBottomSheetBinding
         get() = _binding!!
@@ -81,7 +82,11 @@ class BarcodeScanResultBottomSheetDialogFragment : BottomSheetDialogFragment() {
         CameraComponentProvider.get(requireContext().applicationContext).inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentBarcodeScanBottomSheetBinding.inflate(inflater, container, false)
         return vb.root
     }
@@ -93,13 +98,13 @@ class BarcodeScanResultBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getBookLoadingState().observe(this, { state ->
-            when (state) {
+        viewModel.getBookLoadingState().observe(this) {
+            when (it) {
                 is BookLoadingState.Loading -> showLoadingLayout()
-                is BookLoadingState.Error -> showErrorLayout(getString(state.cause))
-                is BookLoadingState.Success -> showSuccessLayout(state.bookSuggestion)
+                is BookLoadingState.Error -> showErrorLayout(getString(it.cause))
+                is BookLoadingState.Success -> showSuccessLayout(it.bookSuggestion)
             }
-        })
+        }
 
         viewModel.onBookStoredEvent()
             .observeOn(AndroidSchedulers.mainThread())
@@ -117,6 +122,7 @@ class BarcodeScanResultBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     sendCreationBroadcast(event.state)
                 }
             }
+
             is BarcodeResultViewModel.BookStoredEvent.Error -> {
                 Toast.makeText(context, event.reason, Toast.LENGTH_LONG).show()
             }
@@ -175,6 +181,12 @@ class BarcodeScanResultBottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
 
             vb.btnBarcodeResultForLater.setOnClickListener {
+                if (bookRepository.allBooks.any { it.title == this.title }) {
+                    Timber.w("Book is already on the list")
+                    Toast.makeText(context, "Book is already on your lists!", Toast.LENGTH_LONG)
+                        .show()
+                    return@setOnClickListener
+                }
                 viewModel.storeBook(this, state = BookState.READ_LATER)
                 onBookAddedListener?.invoke(title)
             }
@@ -202,7 +214,10 @@ class BarcodeScanResultBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun showOtherSuggestionsModal(suggestions: List<BookEntity>, selectionListener: (BookEntity) -> Unit) {
+    private fun showOtherSuggestionsModal(
+        suggestions: List<BookEntity>,
+        selectionListener: (BookEntity) -> Unit
+    ) {
 
         MaterialDialog(requireContext()).show {
             title(R.string.download_suggestion_header_other)

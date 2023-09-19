@@ -195,10 +195,10 @@ class BookDetailFragment : BaseFragment<FragmentBookDetailBinding>(),
     }
 
     override fun bindViewModel() {
-        viewModel.getViewState().observe(this, { viewState ->
-            initializeBookInformation(viewState.book, viewState.showSummary)
-            initializeTimeInformation(viewState.book)
-        })
+        viewModel.getViewState().observe(this) {
+            initializeBookInformation(it.book, it.showSummary)
+            initializeTimeInformation(it.book)
+        }
 
         viewModel.getLabels().observe(this, Observer(::setupLabels))
 
