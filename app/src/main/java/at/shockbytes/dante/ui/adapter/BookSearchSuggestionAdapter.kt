@@ -18,6 +18,7 @@ class BookSearchSuggestionAdapter(
     context: Context,
     private val imageLoader: ImageLoader,
     private val addClickedListener: (BookSearchItem) -> Unit,
+    private val deleteClickedListener: (BookSearchItem) -> Unit,
     onItemClickListener: OnItemClickListener<BookSearchItem>
 ) : BaseAdapter<BookSearchItem>(context, onItemClickListener) {
 
@@ -40,6 +41,13 @@ class BookSearchSuggestionAdapter(
                 }
             }
 
+            vb.itemBookSearchSuggestionBtnDelete.apply {
+                setVisible(BookIds.isValid(content.bookId))
+                setOnClickListener {
+                    deleteClickedListener.invoke(content)
+                }
+            }
+
             loadImage(content.thumbnailAddress)
         }
 
@@ -50,7 +58,8 @@ class BookSearchSuggestionAdapter(
                     thumbnailAddress,
                     vb.itemBookSearchSuggestionImgviewCover,
                     R.drawable.ic_placeholder,
-                    cornerDimension = context.resources.getDimension(R.dimen.thumbnail_rounded_corner).toInt()
+                    cornerDimension = context.resources.getDimension(R.dimen.thumbnail_rounded_corner)
+                        .toInt()
                 )
             }
         }

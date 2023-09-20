@@ -2,21 +2,22 @@ package at.shockbytes.dante.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import at.shockbytes.dante.R
 import at.shockbytes.dante.core.book.BookIds
 import at.shockbytes.dante.core.book.BookSearchItem
+import at.shockbytes.dante.core.data.BookRepository
+import at.shockbytes.dante.core.image.ImageLoader
+import at.shockbytes.dante.databinding.FragmentSearchBinding
 import at.shockbytes.dante.injection.AppComponent
 import at.shockbytes.dante.injection.ViewModelFactory
 import at.shockbytes.dante.ui.activity.DetailActivity
 import at.shockbytes.dante.ui.activity.SearchActivity
 import at.shockbytes.dante.ui.adapter.BookSearchSuggestionAdapter
-import at.shockbytes.dante.core.image.ImageLoader
-import at.shockbytes.dante.databinding.FragmentSearchBinding
 import at.shockbytes.dante.ui.viewmodel.SearchViewModel
 import at.shockbytes.dante.util.hideKeyboard
 import at.shockbytes.dante.util.viewModelOfActivity
@@ -28,7 +29,8 @@ import javax.inject.Inject
  * Author:  Martin Macheiner
  * Date:    03.02.2018
  */
-class SearchFragment : BaseFragment<FragmentSearchBinding>(), BaseAdapter.OnItemClickListener<BookSearchItem> {
+class SearchFragment : BaseFragment<FragmentSearchBinding>(),
+    BaseAdapter.OnItemClickListener<BookSearchItem> {
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -44,12 +46,19 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), BaseAdapter.OnItem
     @Inject
     lateinit var vmFactory: ViewModelFactory
 
+    @Inject
+    lateinit var bookRepository: BookRepository
+
     private lateinit var viewModel: SearchViewModel
 
-    private val addClickedListener: ((BookSearchItem) -> Unit) = { item ->
+    private val addClickedListener: ((BookSearchItem) -> Unit) = {
         activity?.hideKeyboard()
         vb.fragmentSearchSearchview.setSearchFocused(false)
-        viewModel.requestBookDownload(item)
+        viewModel.requestBookDownload(it)
+    }
+
+    private val deleteClickedListener: ((BookSearchItem) -> Unit) = {
+        bookRepository.delete(it.bookId).blockingAwait()
     }
 
     private lateinit var rvAdapter: BookSearchSuggestionAdapter
@@ -62,11 +71,22 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), BaseAdapter.OnItem
     override fun setupViews() {
 
         requireContext().let { ctx ->
-            rvAdapter = BookSearchSuggestionAdapter(ctx, imageLoader, addClickedListener, onItemClickListener = this)
+            rvAdapter = BookSearchSuggestionAdapter(
+                ctx,
+                imageLoader,
+                addClickedListener,
+                deleteClickedListener,
+                onItemClickListener = this
+            )
             vb.fragmentSearchRv.layoutManager = LinearLayoutManager(context)
             vb.fragmentSearchRv.adapter = rvAdapter
             val dividerItemDecoration = DividerItemDecoration(ctx, DividerItemDecoration.VERTICAL)
-            dividerItemDecoration.setDrawable(ContextCompat.getDrawable(ctx, R.drawable.recycler_divider)!!)
+            dividerItemDecoration.setDrawable(
+                ContextCompat.getDrawable(
+                    ctx,
+                    R.drawable.recycler_divider
+                )!!
+            )
             vb.fragmentSearchRv.addItemDecoration(dividerItemDecoration)
         }
 
@@ -100,27 +120,30 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), BaseAdapter.OnItem
 
     override fun bindViewModel() {
 
-        viewModel.getSearchState().observe(this, { searchState ->
-            when (searchState) {
+        viewModel.getSearchState().observe(this) {
+            when (it) {
                 is SearchViewModel.SearchState.LoadingState -> {
                     vb.fragmentSearchSearchview.showProgress(true)
                     vb.fragmentSearchBtnSearchOnline.isEnabled = false
                 }
+
                 is SearchViewModel.SearchState.EmptyState -> {
                     vb.fragmentSearchSearchview.showProgress(false)
                     rvAdapter.clear()
                     vb.fragmentSearchEmptyView.visibility = View.VISIBLE
                     vb.fragmentSearchBtnSearchOnline.isEnabled = true
                 }
+
                 is SearchViewModel.SearchState.SuccessState -> {
                     vb.fragmentSearchSearchview.showProgress(false)
-                    rvAdapter.data = searchState.items.toMutableList()
+                    rvAdapter.data = it.items.toMutableList()
                     vb.fragmentSearchRv.scrollToPosition(0)
                     vb.fragmentSearchEmptyView.visibility = View.GONE
                     vb.fragmentSearchBtnSearchOnline.isEnabled = true
                 }
+
                 is SearchViewModel.SearchState.ErrorState -> {
-                    showToast(message4SearchException(searchState.throwable))
+                    showToast(message4SearchException(it.throwable))
                     vb.fragmentSearchSearchview.apply {
                         clearQuery()
                         showProgress(false)
@@ -128,13 +151,14 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), BaseAdapter.OnItem
                     vb.fragmentSearchEmptyView.visibility = View.GONE
                     vb.fragmentSearchBtnSearchOnline.isEnabled = true
                 }
+
                 is SearchViewModel.SearchState.InitialState -> {
                     vb.fragmentSearchSearchview.showProgress(false)
                     vb.fragmentSearchEmptyView.visibility = View.GONE
                     vb.fragmentSearchBtnSearchOnline.isEnabled = false
                 }
             }
-        })
+        }
     }
 
     override fun unbindViewModel() = Unit
