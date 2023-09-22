@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/mainBackground">
 
-    <at.shockbytes.dante.ui.custom.SearchView
+    <dev.zbysiu.homer.ui.custom.SearchView
         android:id="@+id/fragment_search_searchview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -7,7 +7,7 @@
     android:layout_marginTop="@dimen/stats_section_margin_top"
     android:orientation="vertical">
 
-    <at.shockbytes.dante.ui.custom.StatsHeaderView
+    <dev.zbysiu.homer.ui.custom.StatsHeaderView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/item_books_pages_over_time_header"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <at.shockbytes.dante.ui.custom.bookspages.BooksAndPagesDiagramView
+            <dev.zbysiu.homer.ui.custom.bookspages.BooksAndPagesDiagramView
                 android:id="@+id/item_pages_stats_diagram_view"
                 android:layout_width="match_parent"
                 android:layout_margin="16dp"

@@ -7,7 +7,7 @@
     android:minHeight="300dp"
     android:orientation="vertical">
 
-    <at.shockbytes.dante.core.ui.HandleView
+    <dev.zbysiu.homer.core.ui.HandleView
         android:id="@+id/handle_view_barcode_scan_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

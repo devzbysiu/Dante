@@ -8,7 +8,7 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "at.shockbytes.dante"
+        applicationId 'dev.zbysiu.homer'
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 46
@@ -61,7 +61,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    namespace 'at.shockbytes.dante'
+    namespace 'dev.zbysiu.homer'
     lint {
         disable 'RestrictedApi'
     }

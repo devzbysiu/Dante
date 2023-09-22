@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Their darkest hour" />
 
-    <at.shockbytes.dante.ui.custom.TimeLineItemView
+    <dev.zbysiu.homer.ui.custom.TimeLineItemView
         android:id="@+id/item_time_line_book_timeline"
         android:layout_width="32dp"
         android:layout_height="match_parent"

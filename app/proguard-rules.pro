@@ -34,29 +34,29 @@
 -keep public class android.app.ActivityTransitionCoordinator
 
 # Do not obfuscate backup models
--keepclassmembers class at.shockbytes.dante.backup.model.* {
+-keepclassmembers class dev.zbysiu.homer.backup.model.* {
     <fields>;
     <init>();
     <methods>;
 }
--keep class at.shockbytes.dante.core.book.** {*;}
--keepclassmembers class at.shockbytes.dante.core.book.* {
+-keep class dev.zbysiu.homer.core.book.** {*;}
+-keepclassmembers class dev.zbysiu.homer.core.book.* {
     <fields>;
     <init>();
     <methods>;
 }
 
 # Suggestions feature
--keep class at.shockbytes.dante.suggestions.** {*;}
--keepclassmembers class at.shockbytes.dante.suggestion.* {
+-keep class dev.zbysiu.homer.suggestions.** {*;}
+-keepclassmembers class dev.zbysiu.homer.suggestion.* {
     <fields>;
     <init>();
     <methods>;
 }
 
 # Seasonal theme data
--keep class at.shockbytes.dante.theme.data.** {*;}
--keepclassmembers class at.shockbytes.dante.theme.data.* {
+-keep class dev.zbysiu.homer.theme.data.** {*;}
+-keepclassmembers class dev.zbysiu.homer.theme.data.* {
     <fields>;
     <init>();
     <methods>;

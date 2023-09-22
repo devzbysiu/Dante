@@ -25,7 +25,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    namespace 'at.shockbytes.dante.camera'
+    namespace 'dev.zbysiu.homer.camera'
 }
 
 dependencies {

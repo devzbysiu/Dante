@@ -7,7 +7,7 @@
     android:layout_marginTop="@dimen/stats_section_margin_top"
     android:orientation="vertical">
 
-    <at.shockbytes.dante.ui.custom.StatsHeaderView
+    <dev.zbysiu.homer.ui.custom.StatsHeaderView
         android:id="@+id/tv_item_stats_books_and_pages_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:orientation="vertical">
 
 
-            <at.shockbytes.dante.ui.custom.rbc.RelativeBarChart
+            <dev.zbysiu.homer.ui.custom.rbc.RelativeBarChart
                 android:id="@+id/rbc_item_stats_books"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
@@ -78,7 +78,7 @@
 
             </LinearLayout>
 
-            <at.shockbytes.dante.ui.custom.rbc.RelativeBarChart
+            <dev.zbysiu.homer.ui.custom.rbc.RelativeBarChart
                 android:id="@+id/rbc_item_stats_pages"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"

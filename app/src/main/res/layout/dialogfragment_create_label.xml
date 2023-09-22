@@ -36,7 +36,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <at.shockbytes.dante.ui.custom.colorpicker.ColorPickerView
+    <dev.zbysiu.homer.ui.custom.colorpicker.ColorPickerView
         android:id="@+id/color_picker_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

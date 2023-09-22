@@ -77,7 +77,7 @@
                     tools:alpha="1"
                     tools:translationX="2dp" />
 
-                <at.shockbytes.dante.ui.custom.SeasonalThemeView
+                <dev.zbysiu.homer.ui.custom.SeasonalThemeView
                     android:id="@+id/seasonalThemeView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -235,7 +235,7 @@
         android:layout_margin="16dp"
         app:backgroundTint="@color/colorAccent"
         app:tint="@color/white"
-        app:layout_behavior="at.shockbytes.dante.ui.custom.ScrollAndMorphAwareFloatingActionButtonBehavior"
+        app:layout_behavior="dev.zbysiu.homer.ui.custom.ScrollAndMorphAwareFloatingActionButtonBehavior"
         app:srcCompat="@drawable/ic_add_round"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

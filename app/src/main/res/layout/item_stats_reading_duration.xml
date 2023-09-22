@@ -7,7 +7,7 @@
     android:layout_marginTop="@dimen/stats_section_margin_top"
     android:orientation="vertical">
 
-    <at.shockbytes.dante.ui.custom.StatsHeaderView
+    <dev.zbysiu.homer.ui.custom.StatsHeaderView
         android:id="@+id/tv_item_stats_reading_duration_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/stats_section_margin_top">
 
-            <at.shockbytes.dante.ui.custom.BareBoneBookView
+            <dev.zbysiu.homer.ui.custom.BareBoneBookView
                 android:id="@+id/bare_bone_book_view_slowest_book"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <at.shockbytes.dante.ui.custom.BareBoneBookView
+            <dev.zbysiu.homer.ui.custom.BareBoneBookView
                 android:id="@+id/bare_bone_book_view_fastest_book"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -21,6 +21,6 @@
 #-renamesourcefileattribute SourceFile
 
 # Never obfuscate model classes
--keepclassmembers class at.shockbytes.dante.core.book.* {
+-keepclassmembers class dev.zbysiu.homer.core.book.* {
   *;
 }

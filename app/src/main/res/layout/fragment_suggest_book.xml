@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/suggestion_background" />
 
-    <at.shockbytes.dante.core.ui.HandleView
+    <dev.zbysiu.homer.core.ui.HandleView
         android:id="@+id/handle_view_suggest_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

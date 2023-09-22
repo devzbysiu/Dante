@@ -10,8 +10,8 @@
         android:shortcutShortLabel="@string/menu_fab_scan">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="at.shockbytes.dante.camera.BarcodeCaptureActivity"
-            android:targetPackage="at.shockbytes.dante">
+            android:targetClass="dev.zbysiu.homer.camera.BarcodeCaptureActivity"
+            android:targetPackage="dev.zbysiu.homer">
 
             <extra
                 android:name="app_shortcut"
@@ -30,8 +30,8 @@
 
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="at.shockbytes.dante.ui.activity.MainActivity"
-            android:targetPackage="at.shockbytes.dante">
+            android:targetClass="dev.zbysiu.homer.ui.activity.MainActivity"
+            android:targetPackage="dev.zbysiu.homer">
 
             <extra
                 android:name="app_shortcut"
@@ -50,8 +50,8 @@
         android:shortcutShortLabel="@string/menu_fab_manual">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="at.shockbytes.dante.ui.activity.ManualAddActivity"
-            android:targetPackage="at.shockbytes.dante" >
+            android:targetClass="dev.zbysiu.homer.ui.activity.ManualAddActivity"
+            android:targetPackage="dev.zbysiu.homer" >
 
             <extra
                 android:name="app_shortcut"

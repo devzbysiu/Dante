@@ -19,7 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'at.shockbytes.dante.util'
+    namespace 'dev.zbysiu.homer.utils'
 
 }
 

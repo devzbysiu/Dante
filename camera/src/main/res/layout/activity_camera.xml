@@ -18,7 +18,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-    <at.shockbytes.dante.camera.overlay.BarcodeScanTargetView
+    <dev.zbysiu.homer.camera.overlay.BarcodeScanTargetView
         android:layout_width="match_parent"
         app:bg_color="@color/scan_target_background"
         app:target_size="300dp"

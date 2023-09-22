@@ -18,7 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'at.shockbytes.tracking'
+    namespace 'dev.zbysiu.tracking'
 
 }
 

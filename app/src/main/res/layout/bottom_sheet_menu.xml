@@ -7,7 +7,7 @@
     android:background="@color/bottom_menu_background"
     android:paddingBottom="24dp">
 
-    <at.shockbytes.dante.ui.custom.profile.ProfileHeaderView
+    <dev.zbysiu.homer.ui.custom.profile.ProfileHeaderView
         android:id="@+id/profileHeaderMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btnMenuLogin"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <at.shockbytes.dante.ui.custom.profile.ProfileActionView
+    <dev.zbysiu.homer.ui.custom.profile.ProfileActionView
         android:id="@+id/profileActionViewMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
